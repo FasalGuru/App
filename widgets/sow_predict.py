@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QLineEdit, QPushButton
 from PySide6.QtGui import QDoubleValidator
 import torch
 
@@ -23,6 +23,7 @@ import sys
 import os
 
 from utils.detector import Detector
+from widgets.scrollable_list import ScrollableList
 
 class LineInput(QLineEdit):
     def __enforce_valid_input(self, line_edit):
@@ -54,7 +55,13 @@ class SowPredictTab(QWidget):
 
         # Create form layout
         self.__form = self.__parameters_form()
-        self.__layout.addLayout(self.__form)
+
+        # Upper layout
+        upper_layout = QHBoxLayout()
+        upper_layout.addLayout(self.__form)
+        upper_layout.addWidget(ScrollableList())
+
+        self.__layout.addLayout(upper_layout)
 
         # Submit Button
         submit_button = QPushButton("Submit")
