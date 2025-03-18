@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton
 from PySide6.QtGui import QDoubleValidator
+import torch
 
 # N - ratio of Nitrogen content in soil
 # P - ratio of Phosphorous content in soil
@@ -17,6 +18,12 @@ from PySide6.QtGui import QDoubleValidator
 # 99.98187601
 # 9.93509073
 # 298.5601175
+
+import sys
+import os
+
+sys.path.append(os.path.abspath("./utils"))
+from detector import Detector
 
 class LineInput(QLineEdit):
     def __enforce_valid_input(self, line_edit):
@@ -44,6 +51,7 @@ class SowPredictTab(QWidget):
         super().__init__()
         self.__layout = QVBoxLayout()
         self.__form_values = {}
+        self.detector = Detector()
 
         # Create form layout
         self.__form = self.__parameters_form()
@@ -92,4 +100,13 @@ class SowPredictTab(QWidget):
         print("Form Data Submitted:")
         for key, value in self.__form_values.items():
             print(f"{key}: {value}")
+
+        input_tensor = torch.tensor([list(self.__form_values.values())], dtype=torch.float32)
+        with torch.no_grad():
+            prediction = self.detector.Tabular(input_tensor)
+
+        predicted_class = prediction.argmax(dim=1).item()
+        print(f"Predicted Class: {predicted_class}")
+
+
 
