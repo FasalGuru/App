@@ -56,7 +56,7 @@ class ToolBar(QToolBar):
         )
     
     def __info_action(self):
-        url = "https://pytorch.org/tutorials/beginner/saving_loading_models.html" ## Temporay
+        url = "https://github.com/FasalGuru" 
         QDesktopServices.openUrl(url)
 
     def __screenshot(self):
