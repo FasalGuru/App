@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Fasal Guru")
         self.setWindowIcon(QIcon("./assets/Fasal.png"))
-
+        self.setGeometry(0, 0, 1200, 1000)
         self.addToolBar(ToolBar(self))
         self.setCentralWidget(TabWidget())
 
