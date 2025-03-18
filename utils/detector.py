@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import sys
 import os
+import pickle
 
 HIDDEN_NEURONS = 10
 
@@ -34,4 +35,9 @@ class Detector:
     Tabular = Model()
     def __init__(self):
         Detector.Tabular.load_state_dict(torch.load(resource_path("models/tabular_sowing_classification.pt")))
+
+    def predict_class(self, prediction):
+        with open(resource_path("models/label_encoder.pkl"), "rb") as f:
+            label_encoder = pickle.load(f)
+        return label_encoder.inverse_transform([prediction])[0]
 

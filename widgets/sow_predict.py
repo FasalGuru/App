@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QLineEdit, QPushButton
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QLineEdit, QPushButton, QLabel
 from PySide6.QtGui import QDoubleValidator
 import torch
 
@@ -22,8 +22,9 @@ import torch
 import sys
 import os
 
-from utils.detector import Detector
 from widgets.scrollable_list import ScrollableList
+from widgets.histogram import Histogram
+from utils.detector import Detector
 
 class LineInput(QLineEdit):
     def __enforce_valid_input(self, line_edit):
@@ -55,18 +56,30 @@ class SowPredictTab(QWidget):
 
         # Create form layout
         self.__form = self.__parameters_form()
-
+        self.__result_layout = QVBoxLayout()
+        self.__result_layout.addWidget(QLabel("Result"))
+        self.__result = QLabel()
+        self.__result_layout.addWidget(self.__result)
+        self.__histogram = Histogram()
         # Upper layout
         upper_layout = QHBoxLayout()
-        upper_layout.addLayout(self.__form)
-        upper_layout.addWidget(ScrollableList())
+        form_layout = QVBoxLayout()
 
-        self.__layout.addLayout(upper_layout)
-
-        # Submit Button
+        form_layout.addLayout(self.__form)
         submit_button = QPushButton("Submit")
         submit_button.clicked.connect(self.__submit_form)
-        self.__layout.addWidget(submit_button)
+        form_layout.addWidget(submit_button)
+
+        upper_layout.addLayout(form_layout)
+        upper_layout.addWidget(ScrollableList())
+
+        # Lower layout
+        lower_layout = QHBoxLayout()
+        lower_layout.addLayout(self.__result_layout)
+        lower_layout.addWidget(self.__histogram)
+
+        self.__layout.addLayout(upper_layout)
+        self.__layout.addLayout(lower_layout)
 
         self.setLayout(self.__layout)
 
@@ -111,8 +124,10 @@ class SowPredictTab(QWidget):
         with torch.no_grad():
             prediction = self.detector.Tabular(input_tensor)
 
-        predicted_class = prediction.argmax(dim=1).item()
-        print(f"Predicted Class: {predicted_class}")
+        predicted_class_num = prediction.argmax(dim=1).item()
+        print(f"Predicted Class: {self.detector.predict_class(predicted_class_num)}")
+        self.__result.setText(f"{self.detector.predict_class(predicted_class_num)}")
+        self.__histogram.plot_histogram(data=list(self.__form_values.values()))
 
 
 
