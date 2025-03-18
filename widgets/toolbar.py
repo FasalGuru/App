@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QToolBar, QLineEdit, QFileDialog, QMessageBox
 from PySide6.QtGui import QAction, QIcon, QPixmap, QImage, QDesktopServices
 from PySide6.QtCore import Qt, QSize
+import sys
 import os
 
 
@@ -19,11 +20,15 @@ class ToolBar(QToolBar):
         self.__info()
 
     def __get_icon(self, icon_path):
-        icon_path = os.path.abspath(icon_path).replace("\\", "/")
+        if hasattr(sys, "_MEIPASS"):  # Running as an .exe
+            icon_path = os.path.join(sys._MEIPASS, icon_path)
+        else:  # Running in normal Python
+            icon_path = os.path.abspath(icon_path)
+        
+        icon_path = icon_path.replace("\\", "/")
         if not os.path.exists(icon_path):
             return None
-        else:
-            return QIcon(icon_path)
+        return QIcon(icon_path)
 
     def __screenshot_action(self):
         screenshot_bitmap = QPixmap(

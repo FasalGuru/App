@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QTabWidget, QWidget
-from sow_predict import SowPredictTab
+from widgets.sow_predict import SowPredictTab
 
 class TabWidget(QTabWidget):
     def __init__(self):

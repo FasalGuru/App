@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import sys
 import os
 
 HIDDEN_NEURONS = 10
@@ -23,9 +24,14 @@ class Model(nn.Module):
 
         return x
 
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.abspath(relative_path)
+
 
 class Detector:
     Tabular = Model()
     def __init__(self):
-        Detector.Tabular.load_state_dict(torch.load(os.path.abspath("./models/tabular_sowing_classification.pt")))
+        Detector.Tabular.load_state_dict(torch.load(resource_path("models/tabular_sowing_classification.pt")))
 

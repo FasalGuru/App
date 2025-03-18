@@ -1,11 +1,9 @@
 from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtGui import QIcon
 import sys
-import os
 
-sys.path.append(os.path.abspath("./widgets"))
-from toolbar import ToolBar
-from tab_widget import TabWidget
+from widgets.toolbar import ToolBar
+from widgets.tab_widget import TabWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):

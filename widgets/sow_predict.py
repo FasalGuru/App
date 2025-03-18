@@ -22,8 +22,7 @@ import torch
 import sys
 import os
 
-sys.path.append(os.path.abspath("./utils"))
-from detector import Detector
+from utils.detector import Detector
 
 class LineInput(QLineEdit):
     def __enforce_valid_input(self, line_edit):
